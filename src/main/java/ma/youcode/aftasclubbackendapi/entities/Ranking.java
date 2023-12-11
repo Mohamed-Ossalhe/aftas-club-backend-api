@@ -5,19 +5,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.awt.*;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "levels")
-public class Level {
+@Table(name = "rankings")
+public class Ranking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int code;
-    private String description;
-    private int points;
-    @OneToMany()
-    private List<Fish> fish;
+    private int id;
+    @ManyToOne()
+    private Member member;
+    @ManyToOne()
+    private Competition competition;
+    private int rank;
+    private int score;
 }
