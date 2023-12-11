@@ -1,5 +1,7 @@
 package ma.youcode.aftasclubbackendapi.entities;
 
+import ma.youcode.aftasclubbackendapi.enums.IdentityDocument;
+
 import java.sql.Date;
 
 public class Member {
