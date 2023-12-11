@@ -15,11 +15,15 @@ import java.awt.*;
 public class Ranking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @ManyToOne()
+    private Long id;
+
+    @ManyToOne
     private Member member;
-    @ManyToOne()
+
+    @ManyToOne
     private Competition competition;
+
     private int rank;
+
     private int score;
 }

@@ -15,9 +15,12 @@ import java.util.List;
 public class Level {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int code;
+    private Long code;
+
     private String description;
+
     private int points;
-    @OneToMany()
+
+    @OneToMany(mappedBy = "level")
     private List<Fish> fish;
 }

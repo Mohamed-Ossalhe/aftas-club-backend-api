@@ -1,32 +1,41 @@
 package ma.youcode.aftasclubbackendapi.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
 @Data
+@Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "competitions")
 public class Competition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
+
     private String code;
-    private Date date;
-    private Time startTime;
-    private Time endTime;
-    private int numberOfParticipants;
+
+    private LocalDate date;
+
+    private LocalTime startTime;
+
+    private LocalTime endTime;
+
+    private Integer numberOfParticipants;
+
     private String location;
+
     private double amount;
-    @OneToMany()
+
+    @OneToMany(mappedBy = "competition")
     private List<Hunting> huntings;
+
     @ManyToOne()
     private Ranking ranking;
 }
