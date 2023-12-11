@@ -34,4 +34,4 @@ build/
 
 
 ### resources ###
-src/main/resources/application.yml
+*.yml
