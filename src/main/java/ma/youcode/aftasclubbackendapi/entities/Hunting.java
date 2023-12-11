@@ -1,24 +1,28 @@
 package ma.youcode.aftasclubbackendapi.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Data
+@Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "huntings")
+@Table(name = "hunts")
 public class Hunting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private int numberOfFish;
-    @ManyToOne()
+    private Long id;
+
+    private Integer numberOfFish;
+
+    @ManyToOne
     private Fish fish;
-    @ManyToOne()
+
+    @ManyToOne
     private Member member;
-    @ManyToOne()
+
+    @ManyToOne
     private Competition competition;
 }
