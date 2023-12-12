@@ -16,9 +16,7 @@ import java.util.List;
 @Table(name = "competitions")
 public class Competition {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @Column(unique = true, nullable = false)
     private String code;
 
     private LocalDate date;
@@ -33,9 +31,9 @@ public class Competition {
 
     private double amount;
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition", fetch = FetchType.LAZY)
     private List<Hunting> huntings;
 
-    @ManyToOne()
-    private Ranking ranking;
+    @OneToMany(mappedBy = "competition", fetch = FetchType.LAZY)
+    private List<Ranking> ranking;
 }

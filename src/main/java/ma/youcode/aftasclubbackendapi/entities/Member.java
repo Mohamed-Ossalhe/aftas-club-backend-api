@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ma.youcode.aftasclubbackendapi.enums.IdentityDocument;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -17,24 +17,25 @@ import java.util.List;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long num;
+    private Integer num;
 
     private String name;
 
-    private String familtyName;
+    private String familyName;
 
-    private Date accessionDate;
+    private LocalDate accessionDate;
 
     private String nationality;
 
     @Enumerated(EnumType.STRING)
     private IdentityDocument identityDocument;
 
+    @Column(unique = true, nullable = false)
     private String identityNumber;
 
-    @OneToMany(mappedBy = "member")
-    private List<Hunting> huntings;
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<Hunting> hunting;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Ranking> ranking;
 }
