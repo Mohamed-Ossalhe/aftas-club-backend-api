@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +35,7 @@ public interface IController<R, D, ID> {
      * @param pageable {@link Pageable}
      * @return Response Entity with a list of paginated resources
      */
-    public ResponseEntity<List<Page<D>>> getAllPaginated(Pageable pageable);
+    public ResponseEntity<Page<D>> getAllPaginated(Pageable pageable);
 
     /**
      *
