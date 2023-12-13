@@ -17,14 +17,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
 public class CompetitionServiceImpl implements CompetitionService {
     private final CompetitionRepository competitionRepository;
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyy");
+    private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
     private final ModelMapper mapper;
 
     @Override
@@ -48,27 +53,49 @@ public class CompetitionServiceImpl implements CompetitionService {
         Optional<Competition> competition = competitionRepository.findById(s);
         if (competition.isEmpty())
             throw new CompetitionNotFoundException("Competition Resource Not Found with Code: " + s);
-        return Optional.of(mapper.map(competition, CompetitionDto.class));
+        return Optional.of(mapper.map(competition.get(), CompetitionDto.class));
     }
 
     @Override
     public Optional<CompetitionDto> create(CompetitionRequest competitionRequest) {
-//        if (competitionRepository.getCompetitionByDate(competitionRequest.getDate()).isPresent())
-//            throw new CompetitionAlreadyExistException("Competition Already Exists with Date: " + competitionRequest.getDate());
-//        else {
-//            Competition competition = mapper.map(competitionRequest, Competition.class);
-//            competitionRepository.save(competitionRequest);
-//        }
-        return Optional.of(mapper.map(competitionRequest, CompetitionDto.class));
+        if (competitionRepository.getCompetitionByDate(LocalDate.parse(competitionRequest.getDate(), dateFormatter)).isPresent())
+            throw new CompetitionAlreadyExistException("Competition Already Exists with Date: " + competitionRequest.getDate());
+        else {
+            Competition competition = mapper.map(competitionRequest, Competition.class);
+            competition.setCode(Utils.generateCode(competitionRequest.getLocation(), competitionRequest.getDate()));
+            competition.setDate(LocalDate.parse(competitionRequest.getDate(), dateFormatter));
+            competition.setStartTime(LocalTime.parse(competitionRequest.getStartTime(), timeFormatter));
+            competition.setEndTime(LocalTime.parse(competitionRequest.getEndTime(), timeFormatter));
+            competition.setLocation(competitionRequest.getLocation().toLowerCase());
+
+            Competition savedCompetition = competitionRepository.save(competition);
+            return Optional.of(mapper.map(savedCompetition, CompetitionDto.class));
+        }
     }
 
     @Override
-    public Optional<CompetitionDto> update(CompetitionRequest competitionRequest) {
-        return Optional.empty();
+    public Optional<CompetitionDto> update(CompetitionRequest competitionRequest, String code) {
+        if (competitionRepository.findById(code).isEmpty())
+            throw new CompetitionNotFoundException("Competition Not Found With Code: " + code);
+        else {
+            Competition competition = mapper.map(competitionRequest, Competition.class);
+            competition.setCode(Utils.generateCode(competitionRequest.getLocation(), competitionRequest.getDate()));
+            competition.setDate(LocalDate.parse(competitionRequest.getDate(), dateFormatter));
+            competition.setStartTime(LocalTime.parse(competitionRequest.getStartTime(), timeFormatter));
+            competition.setEndTime(LocalTime.parse(competitionRequest.getEndTime(), timeFormatter));
+            competition.setLocation(competitionRequest.getLocation().toLowerCase());
+
+            Competition updatedCompetition = competitionRepository.save(competition);
+            return Optional.of(mapper.map(updatedCompetition, CompetitionDto.class));
+        }
     }
 
     @Override
     public boolean destroy(String s) {
-        return false;
+        Optional<Competition> competition = competitionRepository.findById(s);
+        if (competition.isPresent()) {
+            competitionRepository.deleteById(s);
+            return true;
+        } else throw new CompetitionNotFoundException("Competition Not Found With Code: " + s);
     }
 }

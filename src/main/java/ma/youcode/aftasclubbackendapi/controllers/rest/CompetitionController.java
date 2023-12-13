@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import ma.youcode.aftasclubbackendapi.controllers.IController;
 import ma.youcode.aftasclubbackendapi.dto.CompetitionDto;
 import ma.youcode.aftasclubbackendapi.dto.requests.CompetitionRequest;
-import ma.youcode.aftasclubbackendapi.repositories.CompetitionRepository;
 import ma.youcode.aftasclubbackendapi.services.CompetitionService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -53,12 +54,19 @@ public class CompetitionController implements IController<CompetitionRequest, Co
     }
 
     @Override
-    public ResponseEntity<CompetitionDto> update(CompetitionRequest competitionRequest, String s) {
-        return null;
+    @PatchMapping("/{code}/update")
+    public ResponseEntity<CompetitionDto> update(@Valid @RequestBody CompetitionRequest competitionRequest, @PathVariable  String code) {
+        Optional<CompetitionDto> competitionUpdated = competitionService.update(competitionRequest, code);
+        assert competitionUpdated.isPresent();
+        return new ResponseEntity<>(competitionUpdated.get(), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Map<String, String>> destroy(String s) {
-        return null;
+    @DeleteMapping("/{code}/delete")
+    public ResponseEntity<Map<String, String>> destroy(@PathVariable String code) {
+        Map<String, String> messages = new HashMap<>();
+        if (competitionService.destroy(code)) messages.put("message", "Competition Deleted Successfully");
+        else messages.put("message", "Couldn't Delete Competition");
+        return new ResponseEntity<>(messages, HttpStatus.OK);
     }
 }

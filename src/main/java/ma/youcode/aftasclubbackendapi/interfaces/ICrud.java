@@ -39,7 +39,7 @@ public interface ICrud<T, D, ID> {
      * @param d
      * @return
      */
-    Optional<T> update(D d);
+    Optional<T> update(D d, ID id);
 
     /**
      *
