@@ -2,6 +2,7 @@ package ma.youcode.aftasclubbackendapi.services.implementation;
 
 import lombok.RequiredArgsConstructor;
 import ma.youcode.aftasclubbackendapi.dto.CompetitionDto;
+import ma.youcode.aftasclubbackendapi.dto.requests.CompetitionRequest;
 import ma.youcode.aftasclubbackendapi.entities.Competition;
 import ma.youcode.aftasclubbackendapi.exceptions.NotFoundExceptions.CompetitionNotFoundException;
 import ma.youcode.aftasclubbackendapi.exceptions.ValidationExceptions.UniqueConstraintViolationException;
@@ -22,43 +23,36 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CompetitionServiceImpl implements CompetitionService {
-
     private final CompetitionRepository competitionRepository;
     private final ModelMapper mapper;
-    // date formatter
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     @Override
-    public List<Competition> getAll() {
-        return competitionRepository.findAll();
-    };
-
-    @Override
-    public Page<Competition> getAll(Pageable pageable) {
-        return competitionRepository.findAll(pageable);
+    public List<CompetitionDto> getAll() {
+        List<Competition> competitions = competitionRepository.findAll();
+        return competitions.stream().map(competition -> mapper.map(competition, CompetitionDto.class)).toList();
     }
 
     @Override
-    public Optional<Competition> find(String code) {
-        Optional<Competition> competition = competitionRepository.findById(code);
-        if (competition.isPresent())
-            return competition;
-        throw new CompetitionNotFoundException("Competition Resource Not Found with Code: " + code);
+    public Page<CompetitionDto> getAll(Pageable pageable) {
+        Page<Competition> competitionPagination = competitionRepository.findAll(pageable);
+        return competitionPagination.map(competition -> mapper.map(competition, CompetitionDto.class));
     }
 
     @Override
-    public Optional<Competition> create(CompetitionDto competitionDto) {
-        if (competitionRepository.getCompetitionByDate(competitionDto.getDate()).isPresent())
-            throw new UniqueConstraintViolationException("Competition is Already Exist With Date: " + competitionDto.getDate());
-        else {
-            Competition competition = mapper.map(competitionDto, Competition.class);
-            competition.setCode(Utils.generateCode(competition.getLocation()));
-            return Optional.of(competition);
-        }
+    public Optional<CompetitionDto> find(String s) {
+        Optional<Competition> competition = competitionRepository.findById(s);
+        if (!competition.isPresent())
+            throw new CompetitionNotFoundException("Competition Resource Not Found with Code: " + s);
+        return Optional.of(mapper.map(competition, CompetitionDto.class));
     }
 
     @Override
-    public Optional<Competition> update(CompetitionDto competitionDto) {
+    public Optional<CompetitionDto> create(CompetitionRequest competitionRequest) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<CompetitionDto> update(CompetitionRequest competitionRequest) {
         return Optional.empty();
     }
 
