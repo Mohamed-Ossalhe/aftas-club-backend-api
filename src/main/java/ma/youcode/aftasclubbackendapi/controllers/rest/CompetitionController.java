@@ -1,5 +1,6 @@
 package ma.youcode.aftasclubbackendapi.controllers.rest;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import ma.youcode.aftasclubbackendapi.controllers.IController;
 import ma.youcode.aftasclubbackendapi.dto.CompetitionDto;
@@ -9,10 +10,7 @@ import ma.youcode.aftasclubbackendapi.services.CompetitionService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
 import java.util.List;
@@ -47,8 +45,11 @@ public class CompetitionController implements IController<CompetitionRequest, Co
     }
 
     @Override
-    public ResponseEntity<CompetitionDto> create(CompetitionRequest competitionRequest) {
-        return null;
+    @PostMapping("/create")
+    public ResponseEntity<CompetitionDto> create(@Valid @RequestBody CompetitionRequest competitionRequest) {
+        Optional<CompetitionDto> competitionCreated = competitionService.create(competitionRequest);
+        assert competitionCreated.isPresent();
+        return new ResponseEntity<>(competitionCreated.get(), HttpStatus.CREATED);
     }
 
     @Override
