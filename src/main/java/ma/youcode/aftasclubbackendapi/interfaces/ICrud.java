@@ -1,6 +1,8 @@
 package ma.youcode.aftasclubbackendapi.interfaces;
 
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Page;
+
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +11,14 @@ public interface ICrud<T, D, ID> {
      *
      * @return
      */
-    List<T> getAll(Pageable pageable);
+    List<T> getAll();
+
+    /**
+     *
+     * @param pageable
+     * @return
+     */
+    Page<T> getAll(Pageable pageable);
 
     /**
      *
