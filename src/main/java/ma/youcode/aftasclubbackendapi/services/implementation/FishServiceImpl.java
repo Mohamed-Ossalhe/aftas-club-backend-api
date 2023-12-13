@@ -49,14 +49,13 @@ public class FishServiceImpl implements FishService {
 
     @Override
     public Optional<FishDto> create(FishRequest fishRequest) {
-//        if (fishRepository.findById(fishRequest.getName()).isPresent())
-//            throw new FishAlreadyExistException("Fish already Exist with Name: " + fishRequest.getName());
-//        else {
-//            Fish fish = mapper.map(fishRequest, Fish.class);
-//            Fish savedFish = fishRepository.save(fish);
-//            return Optional.of(mapper.map(savedFish, FishDto.class));
-//        }
-        return Optional.of(mapper.map(fishRequest, FishDto.class));
+        if (fishRepository.findById(fishRequest.getName()).isPresent())
+            throw new FishAlreadyExistException("Fish already Exist with Name: " + fishRequest.getName());
+        else {
+            Fish fish = mapper.map(fishRequest, Fish.class);
+            Fish savedFish = fishRepository.save(fish);
+            return Optional.of(mapper.map(savedFish, FishDto.class));
+        }
     }
 
     @Override
