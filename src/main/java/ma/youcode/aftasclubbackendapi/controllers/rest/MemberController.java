@@ -4,11 +4,11 @@ import ma.youcode.aftasclubbackendapi.controllers.IController;
 import ma.youcode.aftasclubbackendapi.dto.MemberDto;
 import ma.youcode.aftasclubbackendapi.dto.requests.MemberRequest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public class MemberController implements IController<MemberRequest, MemberDto, I
     }
 
     @Override
-    public ResponseEntity<List<Page<MemberDto>>> getAllPaginated(Pageable pageable) {
+    public ResponseEntity<Page<MemberDto>> getAllPaginated(Pageable pageable) {
         return null;
     }
 

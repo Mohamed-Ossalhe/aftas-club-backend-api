@@ -94,8 +94,8 @@ public class ExceptionsHandler {
      */
     @ExceptionHandler(value = CompetitionAlreadyExistException.class)
     public ResponseEntity<ErrorResponse> handleCompetitionAlreadyExistException(CompetitionAlreadyExistException exception) {
-        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.NOT_FOUND, "Competition Already Exist: " + exception.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.FOUND, "Competition Already Exist: " + exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.FOUND);
     }
 
     /**
@@ -105,8 +105,8 @@ public class ExceptionsHandler {
      */
     @ExceptionHandler(value = FishAlreadyExistException.class)
     public ResponseEntity<ErrorResponse> handleFishAlreadyExistException(FishAlreadyExistException exception) {
-        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.NOT_FOUND, "Fish Already Exist: " + exception.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.FOUND, "Fish Already Exist: " + exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.FOUND);
     }
 
     /**
@@ -116,8 +116,8 @@ public class ExceptionsHandler {
      */
     @ExceptionHandler(value = HuntingAlreadyExistException.class)
     public ResponseEntity<ErrorResponse> handleHuntingAlreadyExistException(HuntingAlreadyExistException exception) {
-        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.NOT_FOUND, "Hunting Already Exist: " + exception.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.FOUND, "Hunting Already Exist: " + exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.FOUND);
     }
 
     /**
@@ -127,8 +127,8 @@ public class ExceptionsHandler {
      */
     @ExceptionHandler(value = LevelAlreadyExistException.class)
     public ResponseEntity<ErrorResponse> handleLevelAlreadyExistException(LevelAlreadyExistException exception) {
-        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.NOT_FOUND, "Level Already Exist: " + exception.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.FOUND, "Level Already Exist: " + exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.FOUND);
     }
 
     /**
@@ -138,8 +138,8 @@ public class ExceptionsHandler {
      */
     @ExceptionHandler(value = MemberAlreadyExistException.class)
     public ResponseEntity<ErrorResponse> handleMemberAlreadyExistException(MemberAlreadyExistException exception) {
-        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.NOT_FOUND, "Member Already Exist: " + exception.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.FOUND, "Member Already Exist: " + exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.FOUND);
     }
 
     /**
@@ -149,8 +149,8 @@ public class ExceptionsHandler {
      */
     @ExceptionHandler(value = RankingAlreadyExistException.class)
     public ResponseEntity<ErrorResponse> handleRankingNotFoundException(RankingAlreadyExistException exception) {
-        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.NOT_FOUND, "Ranking Already Exist: " + exception.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.FOUND, "Ranking Already Exist: " + exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.FOUND);
     }
 
     /***
@@ -165,5 +165,6 @@ public class ExceptionsHandler {
     @ExceptionHandler(UniqueConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleUniqueConstraintViolationException(UniqueConstraintViolationException exception) {
         ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.CONFLICT, "Unique values repeated: " + exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 }
