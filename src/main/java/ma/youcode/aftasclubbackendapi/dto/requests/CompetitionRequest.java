@@ -15,15 +15,15 @@ public class CompetitionRequest {
 
     @NotNull(message = "Date cannot be null")
     @Pattern(regexp = "^\\d{2}-\\d{2}-\\d{4}$", message = "Invalid date format. Use dd-MM-yyyy")
-    private LocalDate date;
+    private String date;
 
     @NotNull(message = "Start Time cannot be null")
     @Pattern(regexp = "^([01]\\d|2[0-3]):([0-5]\\d)$", message = "Invalid time format. Use HH:mm")
-    private LocalTime startTime;
+    private String startTime;
 
     @NotNull(message = "End Time cannot be null")
     @Pattern(regexp = "^([01]\\d|2[0-3]):([0-5]\\d)$", message = "Invalid time format. Use HH:mm")
-    private LocalTime endTime;
+    private String endTime;
 
     @Min(value = 10, message = "number of participants cannot be inferior than 10")
     @NotNull(message = "number of participants cannot be null")
