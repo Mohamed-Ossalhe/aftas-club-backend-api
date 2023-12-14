@@ -20,6 +20,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/fish")
 @RequiredArgsConstructor
+@CrossOrigin("*") // TODO: this should be the frontend url only
 public class FishController implements IController<FishRequest, FishDto, String> {
 
     private final FishService fishService;
