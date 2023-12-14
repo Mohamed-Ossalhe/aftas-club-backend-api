@@ -20,6 +20,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/levels")
 @RequiredArgsConstructor
+@CrossOrigin("*") // TODO: this should be the frontend url only
 public class LevelController implements IController<LevelRequest, LevelDto, Integer> {
 
     private final LevelService levelService;

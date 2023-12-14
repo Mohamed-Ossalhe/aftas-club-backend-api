@@ -21,6 +21,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/competitions")
 @RequiredArgsConstructor
+@CrossOrigin("*") // TODO: this should be the frontend url only
 public class CompetitionController implements IController<CompetitionRequest, CompetitionDto, String> {
 
     private final CompetitionService competitionService;

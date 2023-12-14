@@ -6,6 +6,7 @@ import ma.youcode.aftasclubbackendapi.dto.requests.HuntingRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/hunts")
+@CrossOrigin("*") // TODO: this should be the frontend url only
 public class HuntingController implements IController<HuntingRequest, HuntingDto, Integer> {
     @Override
     public ResponseEntity<HuntingDto> get(Integer integer) {
