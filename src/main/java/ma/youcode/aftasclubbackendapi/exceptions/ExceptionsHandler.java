@@ -2,6 +2,8 @@ package ma.youcode.aftasclubbackendapi.exceptions;
 
 import ma.youcode.aftasclubbackendapi.exceptions.AlreadyExistExceptions.*;
 import ma.youcode.aftasclubbackendapi.exceptions.NotFoundExceptions.*;
+import ma.youcode.aftasclubbackendapi.exceptions.ValidationExceptions.MaxLimitsExceedException;
+import ma.youcode.aftasclubbackendapi.exceptions.ValidationExceptions.TimeExpiredException;
 import ma.youcode.aftasclubbackendapi.exceptions.ValidationExceptions.UniqueConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -185,5 +187,35 @@ public class ExceptionsHandler {
     public ResponseEntity<ErrorResponse> handleUniqueConstraintViolationException(UniqueConstraintViolationException exception) {
         ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.CONFLICT, "Unique values repeated: " + exception.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    /***
+     *  Time Expired Exception
+     ***/
+
+    /**
+     *
+     * @param exception {@link TimeExpiredException}
+     * @return
+     */
+    @ExceptionHandler(TimeExpiredException.class)
+    public ResponseEntity<ErrorResponse> handleTimeExpiredException(TimeExpiredException exception) {
+        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.BAD_REQUEST, "Time Expired: " + exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    /***
+     *  Max Limits Exceed Exception
+     ***/
+
+    /**
+     *
+     * @param exception {@link MaxLimitsExceedException}
+     * @return
+     */
+    @ExceptionHandler(MaxLimitsExceedException.class)
+    public ResponseEntity<ErrorResponse> handleMaxLimitsException(MaxLimitsExceedException exception) {
+        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.BAD_REQUEST, "Max Limits Exceed: " + exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }
