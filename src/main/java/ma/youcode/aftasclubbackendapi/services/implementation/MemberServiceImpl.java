@@ -5,6 +5,7 @@ import ma.youcode.aftasclubbackendapi.dto.MemberDto;
 import ma.youcode.aftasclubbackendapi.dto.requests.MemberRequest;
 import ma.youcode.aftasclubbackendapi.entities.Level;
 import ma.youcode.aftasclubbackendapi.entities.Member;
+import ma.youcode.aftasclubbackendapi.enums.IdentityDocument;
 import ma.youcode.aftasclubbackendapi.exceptions.AlreadyExistExceptions.MemberAlreadyExistException;
 import ma.youcode.aftasclubbackendapi.exceptions.NotFoundExceptions.MemberNotFoundException;
 import ma.youcode.aftasclubbackendapi.repositories.MemberRepository;
@@ -50,8 +51,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Optional<MemberDto> create(MemberRequest memberRequest) {
-        if (memberRepository.findById(memberRequest.getNum()).isPresent())
-            throw new MemberAlreadyExistException("Member is Already exist with id: " + memberRequest.getNum());
+        if (memberRepository.findByIdentityNumber(memberRequest.getIdentityNumber()).isPresent())
+            throw new MemberAlreadyExistException("Member is Already exist with id: " + memberRequest.getIdentityNumber());
         else {
             Member member = mapper.map(memberRequest, Member.class);
             Member savedMember = memberRepository.save(member);
@@ -70,7 +71,7 @@ public class MemberServiceImpl implements MemberService {
             member.setFamilyName(memberRequest.getFamilyName());
             member.setAccessionDate(memberRequest.getAccessionDate());
             member.setNationality(memberRequest.getNationality());
-            member.setIdentityDocument(memberRequest.getIdentityDocument());
+            member.setIdentityDocument(IdentityDocument.valueOf(memberRequest.getIdentityDocument()));
             member.setIdentityNumber(memberRequest.getIdentityNumber());
             Member updatedMember = memberRepository.save(member);
             return Optional.of(mapper.map(updatedMember, MemberDto.class));
