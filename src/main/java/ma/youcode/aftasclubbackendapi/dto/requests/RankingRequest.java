@@ -9,9 +9,9 @@ public class RankingRequest {
 
     private int score;
 
-    @NotNull(message = "Member cannot be null")
+    @NotNull(message = "Member is required")
     private MemberRequest member;
 
-    @NotNull(message = "Competition cannot be null")
+    @NotNull(message = "Competition is required")
     private CompetitionRequest competition;
 }

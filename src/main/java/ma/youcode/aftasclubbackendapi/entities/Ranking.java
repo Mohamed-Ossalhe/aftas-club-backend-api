@@ -19,14 +19,16 @@ public class Ranking {
     @EmbeddedId
     private RankId id;
 
-    private int rank;
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private Integer rank;
 
-    private int score;
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private Integer score;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_num")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @MapsId(value = "memberId")
+    @MapsId(value = "memberNum")
     private Member member;
 
     @ManyToOne
