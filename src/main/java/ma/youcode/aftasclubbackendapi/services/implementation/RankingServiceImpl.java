@@ -12,7 +12,6 @@ import ma.youcode.aftasclubbackendapi.exceptions.NotFoundExceptions.CompetitionN
 import ma.youcode.aftasclubbackendapi.exceptions.NotFoundExceptions.MemberNotFoundException;
 import ma.youcode.aftasclubbackendapi.exceptions.NotFoundExceptions.RankingNotFoundException;
 import ma.youcode.aftasclubbackendapi.exceptions.ValidationExceptions.MaxLimitsExceedException;
-import ma.youcode.aftasclubbackendapi.exceptions.ValidationExceptions.TimeExpiredException;
 import ma.youcode.aftasclubbackendapi.repositories.CompetitionRepository;
 import ma.youcode.aftasclubbackendapi.repositories.MemberRepository;
 import ma.youcode.aftasclubbackendapi.repositories.RankingRepository;
@@ -35,6 +34,10 @@ public class RankingServiceImpl implements RankingService {
     private final MemberRepository memberRepository;
     private final ModelMapper mapper;
 
+    /**
+     * get all resources
+     * @return {@link List}<{@link RankingDto}>
+     */
     @Override
     public List<RankingDto> getAll() {
         List<Ranking> rankings = rankingRepository.findAll();
@@ -43,6 +46,11 @@ public class RankingServiceImpl implements RankingService {
         return rankings.stream().map(ranking -> mapper.map(ranking, RankingDto.class)).toList();
     }
 
+    /**
+     * get all resources paginated
+     * @param pageable {@link Pageable}
+     * @return {@link Page}<{@link RankingDto}>
+     */
     @Override
     public Page<RankingDto> getAll(Pageable pageable) {
         Page<Ranking> rankingPage = rankingRepository.findAll(pageable);
@@ -51,6 +59,11 @@ public class RankingServiceImpl implements RankingService {
         return rankingPage.map(ranking -> mapper.map(ranking, RankingDto.class));
     }
 
+    /**
+     * get a specific resource
+     * @param rankId instance of {@link RankId}
+     * @return {@link Optional}<{@link RankingDto}>
+     */
     @Override
     public Optional<RankingDto> find(RankId rankId) {
         Optional<Ranking> ranking = rankingRepository.findById(rankId);
@@ -59,33 +72,43 @@ public class RankingServiceImpl implements RankingService {
         return Optional.of(mapper.map(ranking, RankingDto.class));
     }
 
+    /**
+     * create & save a new resource
+     * @param rankingRequest instance of {@link RankingRequest}
+     * @return {@link Optional}<{@link RankingDto}>
+     */
     @Override
     public Optional<RankingDto> create(RankingRequest rankingRequest) {
         Member member = memberRepository.findById(rankingRequest.getMember().getNum())
-                .orElseThrow(() -> new MemberNotFoundException("Memeber not Found with Id: " + rankingRequest.getMember().getNum()));
-
+                .orElseThrow(() -> new MemberNotFoundException("Member not Found with Id: " + rankingRequest.getMember().getNum()));
         Competition competition = competitionRepository.findById(rankingRequest.getCompetition().getCode())
                 .orElseThrow(() -> new CompetitionNotFoundException("Competition not Found with code: " + rankingRequest.getCompetition().getCode()));
-
         RankId rankId = new RankId(competition.getCode(), member.getNum());
-
         if (rankingRepository.findById(rankId).isPresent()) throw new MemberAlreadyExistException("Member already exist in the competition");
-
         Long days = Utils.calculateDaysUntilCompetition(competition.getDate());
-
         if (competition.getRanking().size() == competition.getNumberOfParticipants())
             throw new MaxLimitsExceedException("Can't add More Members Competition is Already Full.");
-
         Ranking ranking = new Ranking(rankId, rankingRequest.getRank(), rankingRequest.getScore(), member, competition);
         Ranking savedRanking = rankingRepository.save(ranking);
         return Optional.of(mapper.map(savedRanking, RankingDto.class));
     }
 
+    /**
+     * update a specific resource
+     * @param rankingRequest instance of {@link RankingRequest}
+     * @param rankId instance of {@link RankId}
+     * @return {@link Optional}<{@link RankingDto}>
+     */
     @Override
     public Optional<RankingDto> update(RankingRequest rankingRequest, RankId rankId) {
         return Optional.empty();
     }
 
+    /**
+     * deletes a specific resource
+     * @param rankId instance of {@link RankId}
+     * @return {@link Boolean}
+     */
     @Override
     public boolean destroy(RankId rankId) {
         Optional<Ranking> ranking = rankingRepository.findById(rankId);
