@@ -3,24 +3,23 @@ package ma.youcode.aftasclubbackendapi.services.implementation;
 import lombok.RequiredArgsConstructor;
 import ma.youcode.aftasclubbackendapi.dto.HuntingDto;
 import ma.youcode.aftasclubbackendapi.dto.requests.HuntingRequest;
-import ma.youcode.aftasclubbackendapi.entities.Competition;
-import ma.youcode.aftasclubbackendapi.entities.Fish;
-import ma.youcode.aftasclubbackendapi.entities.Hunting;
-import ma.youcode.aftasclubbackendapi.entities.Member;
+import ma.youcode.aftasclubbackendapi.entities.*;
+import ma.youcode.aftasclubbackendapi.entities.embedded.RankId;
+import ma.youcode.aftasclubbackendapi.exceptions.AlreadyExistExceptions.RankingAlreadyExistException;
 import ma.youcode.aftasclubbackendapi.exceptions.NotFoundExceptions.CompetitionNotFoundException;
 import ma.youcode.aftasclubbackendapi.exceptions.NotFoundExceptions.FishNotFoundException;
 import ma.youcode.aftasclubbackendapi.exceptions.NotFoundExceptions.HuntingNotFoundException;
 import ma.youcode.aftasclubbackendapi.exceptions.NotFoundExceptions.MemberNotFoundException;
-import ma.youcode.aftasclubbackendapi.repositories.CompetitionRepository;
-import ma.youcode.aftasclubbackendapi.repositories.FishRepository;
-import ma.youcode.aftasclubbackendapi.repositories.HuntingRepository;
-import ma.youcode.aftasclubbackendapi.repositories.MemberRepository;
+import ma.youcode.aftasclubbackendapi.exceptions.ValidationExceptions.UnsupportedActionException;
+import ma.youcode.aftasclubbackendapi.repositories.*;
 import ma.youcode.aftasclubbackendapi.services.HuntingService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +31,7 @@ public class HuntingServiceImpl implements HuntingService {
     private final MemberRepository memberRepository;
     private final CompetitionRepository competitionRepository;
     private final FishRepository fishRepository;
+    private final RankingRepository rankingRepository;
     private final ModelMapper mapper;
 
     @Override
@@ -67,7 +67,37 @@ public class HuntingServiceImpl implements HuntingService {
         Fish fish = fishRepository.findById(huntingRequest.getFish().getName())
                 .orElseThrow(() -> new FishNotFoundException("Fish not Found with Name: " + huntingRequest.getFish().getName()));
 
-        return Optional.of(mapper.map(huntingRequest, HuntingDto.class));
+        if (LocalDate.now().isBefore(competition.getDate()) || LocalTime.now().isBefore(competition.getStartTime())) {
+            throw new UnsupportedActionException("Cannot add hunts, competition didn't start yet");
+        }
+
+        if (LocalDate.now().isAfter(competition.getDate()) || LocalTime.now().isAfter(competition.getEndTime())) {
+            throw new UnsupportedActionException("Cannot add Hunts, competition is expired");
+        }
+
+        if (huntingRequest.getFish().getAverageWeight() < fish.getAverageWeight()) {
+            throw new UnsupportedActionException("The Fish " + huntingRequest.getFish().getName() + "'s weight ("+ huntingRequest.getFish().getAverageWeight() +") must be equal to "  + fish.getAverageWeight());
+        }
+
+        RankId rankId = new RankId(competition.getCode(), member.getNum());
+        Ranking ranking = rankingRepository.findById(rankId)
+                .orElseThrow(() -> new UnsupportedActionException("cannot add hunts to a member who is not in a competition"));
+
+
+        Optional<Hunting> hunting = huntingRepository.findHuntingByCompetitionAndMemberAndFish(competition, member, fish);
+        Hunting hunt;
+        if (hunting.isPresent()) {
+            hunt = hunting.get();
+            hunt.setNumberOfFish(hunt.getNumberOfFish() + huntingRequest.getNumberOfFish());
+        }else {
+            hunt = new Hunting();
+            hunt.setCompetition(competition);
+            hunt.setMember(member);
+            hunt.setFish(fish);
+            hunt.setNumberOfFish(huntingRequest.getNumberOfFish());
+        }
+        Hunting savedHunt = huntingRepository.save(hunt);
+        return Optional.of(mapper.map(savedHunt, HuntingDto.class));
     }
 
     @Override
