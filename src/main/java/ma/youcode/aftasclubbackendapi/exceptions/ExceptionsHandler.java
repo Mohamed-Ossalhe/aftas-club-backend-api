@@ -5,6 +5,7 @@ import ma.youcode.aftasclubbackendapi.exceptions.NotFoundExceptions.*;
 import ma.youcode.aftasclubbackendapi.exceptions.ValidationExceptions.MaxLimitsExceedException;
 import ma.youcode.aftasclubbackendapi.exceptions.ValidationExceptions.TimeExpiredException;
 import ma.youcode.aftasclubbackendapi.exceptions.ValidationExceptions.UniqueConstraintViolationException;
+import ma.youcode.aftasclubbackendapi.exceptions.ValidationExceptions.UnsupportedActionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -216,6 +217,20 @@ public class ExceptionsHandler {
     @ExceptionHandler(MaxLimitsExceedException.class)
     public ResponseEntity<ErrorResponse> handleMaxLimitsException(MaxLimitsExceedException exception) {
         ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.BAD_REQUEST, "Max Limits Exceed: " + exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    /***
+     * Unsupported Action Exception
+     ***/
+    /**
+     *
+     * @param exception {@link UnsupportedActionException}
+     * @return
+     */
+    @ExceptionHandler(UnsupportedActionException.class)
+    public ResponseEntity<ErrorResponse> handleUnsupportedActionException(UnsupportedActionException exception) {
+        ErrorResponse errorResponse = ErrorResponse.create(exception, HttpStatus.BAD_REQUEST, "Unsupported Action: " + exception.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }
