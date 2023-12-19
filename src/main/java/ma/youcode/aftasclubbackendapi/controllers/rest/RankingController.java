@@ -21,6 +21,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/rankings")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class RankingController implements IController<RankingRequest, RankingDto, RankId> {
 
     private final RankingService rankingService;
