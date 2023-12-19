@@ -6,10 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ma.youcode.aftasclubbackendapi.entities.Hunting;
+import ma.youcode.aftasclubbackendapi.entities.Ranking;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -30,7 +33,7 @@ public class CompetitionDto implements Serializable {
 
     private double amount;
 
-//    private List<Hunting> huntings;
+    private List<HuntingDto> huntings;
 //
-//    private List<Ranking> ranking;
+    private List<RankingDto> ranking;
 }

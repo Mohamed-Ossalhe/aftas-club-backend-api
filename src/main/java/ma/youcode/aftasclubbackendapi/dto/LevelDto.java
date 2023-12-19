@@ -19,6 +19,4 @@ public class LevelDto implements Serializable {
     private String description;
 
     private Integer points;
-
-//    private List<Fish> fish;
 }

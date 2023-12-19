@@ -8,6 +8,7 @@ import ma.youcode.aftasclubbackendapi.enums.IdentityDocument;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -28,7 +29,7 @@ public class MemberDto implements Serializable {
 
     private String identityNumber;
 
-//    private List<Hunting> hunting;
+//    private List<HuntingDto> hunting;
 
 //    private List<Ranking> ranking;
 }
