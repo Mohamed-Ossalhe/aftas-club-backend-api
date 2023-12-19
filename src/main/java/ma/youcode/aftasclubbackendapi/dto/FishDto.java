@@ -18,6 +18,4 @@ public class FishDto implements Serializable {
     private double averageWeight;
 
     private LevelDto level;
-
-//    private List<Hunting> huntings;
 }

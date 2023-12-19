@@ -18,7 +18,7 @@ public class HuntingDto implements Serializable {
 
     private FishDto fish;
 
-    private MemberDto member;
+    //private MemberDto member;
 
-    private CompetitionDto competition;
+    //private CompetitionDto competition;
 }

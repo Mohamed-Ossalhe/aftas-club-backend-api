@@ -16,5 +16,5 @@ public class RankingDto {
 
     private MemberDto member;
 
-    private CompetitionDto competition;
+    //private CompetitionDto competition;
 }
