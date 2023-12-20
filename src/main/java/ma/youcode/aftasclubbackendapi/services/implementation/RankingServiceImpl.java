@@ -117,4 +117,12 @@ public class RankingServiceImpl implements RankingService {
             return true;
         }else throw new RankingNotFoundException("Ranking not Found with Rank Id: " + rankId);
     }
+
+    @Override
+    public List<RankingDto> getTopRankPodium(String code) {
+        return rankingRepository.findTop3ByCompetitionCode(code)
+                .stream()
+                .map(ranking -> mapper.map(ranking, RankingDto.class))
+                .toList();
+    }
 }

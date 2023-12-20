@@ -68,4 +68,9 @@ public class RankingController implements IController<RankingRequest, RankingDto
         else messages.put("message", "Couldn't Delete Ranking");
         return new ResponseEntity<>(messages, HttpStatus.OK);
     }
+
+    @GetMapping("/{code}/podium")
+    public ResponseEntity<List<RankingDto>> getTopRankPodium(@PathVariable String code) {
+        return new ResponseEntity<>(rankingService.getTopRankPodium(code), HttpStatus.OK);
+    }
 }
