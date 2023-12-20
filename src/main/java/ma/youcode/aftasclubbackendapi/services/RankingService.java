@@ -11,4 +11,5 @@ import java.util.Optional;
 
 public interface RankingService extends ICrud<RankingDto, RankingRequest, RankId> {
     List<RankingDto> getTopRankPodium(String code);
+    List<RankingDto> calcRanking(String code);
 }

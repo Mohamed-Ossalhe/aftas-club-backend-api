@@ -16,7 +16,8 @@ public class Utils {
     public static Long calculateDaysUntilCompetition(LocalDate date) {
         long days = ChronoUnit.DAYS.between(LocalDate.now(), date);
         if (days == 1) throw new TimeExpiredException("Cannot accept members 24h before competition start");
-        else if (days < 1) throw new TimeExpiredException("Cannot accept members after competition expired " + days + " days ago.");
+        else if (days == 0) throw new TimeExpiredException("Cannot accept members after competition is started");
+        else if (days < 0) throw new TimeExpiredException("Cannot accept members after competition expired " + days + " days ago.");
         return days;
     }
 }

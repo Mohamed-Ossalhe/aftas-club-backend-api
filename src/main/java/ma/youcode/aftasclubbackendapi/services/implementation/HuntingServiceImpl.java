@@ -89,14 +89,14 @@ public class HuntingServiceImpl implements HuntingService {
         if (hunting.isPresent()) {
             hunt = hunting.get();
             hunt.setNumberOfFish(hunt.getNumberOfFish() + huntingRequest.getNumberOfFish());
-            ranking.setScore(ranking.getScore() + hunt.getFish().getLevel().getPoints());
+            ranking.setScore(ranking.getScore() + (hunt.getFish().getLevel().getPoints() * huntingRequest.getNumberOfFish()));
         }else {
             hunt = new Hunting();
             hunt.setCompetition(competition);
             hunt.setMember(member);
             hunt.setFish(fish);
             hunt.setNumberOfFish(huntingRequest.getNumberOfFish());
-            ranking.setScore(ranking.getScore() + hunt.getFish().getLevel().getPoints());
+            ranking.setScore(ranking.getScore() + (hunt.getFish().getLevel().getPoints() + huntingRequest.getNumberOfFish()));
         }
         rankingRepository.save(ranking);
         Hunting savedHunt = huntingRepository.save(hunt);

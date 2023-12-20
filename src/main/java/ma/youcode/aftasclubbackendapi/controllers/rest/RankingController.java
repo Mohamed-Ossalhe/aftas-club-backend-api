@@ -71,6 +71,6 @@ public class RankingController implements IController<RankingRequest, RankingDto
 
     @GetMapping("/{code}/podium")
     public ResponseEntity<List<RankingDto>> getTopRankPodium(@PathVariable String code) {
-        return new ResponseEntity<>(rankingService.getTopRankPodium(code), HttpStatus.OK);
+        return new ResponseEntity<>(rankingService.calcRanking(code), HttpStatus.OK);
     }
 }
