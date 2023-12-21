@@ -117,4 +117,30 @@ public class RankingServiceImpl implements RankingService {
             return true;
         }else throw new RankingNotFoundException("Ranking not Found with Rank Id: " + rankId);
     }
+
+    @Override
+    public List<RankingDto> getTopRankPodium(String code) {
+        return rankingRepository.findDistinctTop3ByCompetitionCodeOrderByScoreDesc(code)
+                .stream()
+                .map(ranking -> mapper.map(ranking, RankingDto.class))
+                .toList();
+    }
+
+    @Override
+    public List<RankingDto> calcRanking(String code) {
+        Competition competition = competitionRepository.findById(code)
+                .orElseThrow(() -> new CompetitionNotFoundException("Competition not Found with code: " + code));
+        List<Ranking> rankings = rankingRepository.findAllByCompetitionOrderByScoreDesc(competition);
+
+        for (int i = 0; i < rankings.size(); i++) {
+            rankings.get(i).setRank(i+1);
+        }
+
+        List<Ranking> savedRankings = rankingRepository.saveAll(rankings);
+
+        return savedRankings
+                .stream()
+                .map(ranking -> mapper.map(ranking, RankingDto.class))
+                .toList();
+    }
 }

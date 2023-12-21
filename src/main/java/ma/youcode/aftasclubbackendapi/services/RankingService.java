@@ -6,7 +6,10 @@ import ma.youcode.aftasclubbackendapi.entities.Ranking;
 import ma.youcode.aftasclubbackendapi.entities.embedded.RankId;
 import ma.youcode.aftasclubbackendapi.interfaces.ICrud;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface RankingService extends ICrud<RankingDto, RankingRequest, RankId> {
+    List<RankingDto> getTopRankPodium(String code);
+    List<RankingDto> calcRanking(String code);
 }
